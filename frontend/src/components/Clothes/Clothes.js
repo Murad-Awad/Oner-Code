@@ -3,7 +3,7 @@ import React from 'react';
 export default class Clothes extends React.Component {
 	render() {
 		return (
-			<h1>Your Clothing</h1>
+			<h1 align = 'center'>Your Clothing</h1>
 		);
 	}
 }

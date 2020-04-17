@@ -4,7 +4,7 @@ export default class Form extends React.Component {
 	render() {
 		return (
 			<Fragment>
-				<h1>Add Clothes</h1>
+				<h1 align = 'center'>Add Clothes</h1>
 				<div>
 					<div className="gcse-search" id = "searchBar" ></div>
 				</div>
