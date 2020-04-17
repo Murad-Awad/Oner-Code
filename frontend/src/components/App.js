@@ -51,7 +51,6 @@ class App extends Component {
 
     	// Gets inputted search data when user presses 'enter' on text box
     	textInput.onkeydown = function(key) {
-    		console.log(key) 
     		if (!key) 
     		key = window.event
     		var keyCode = key.keyCode || key.which
@@ -59,13 +58,31 @@ class App extends Component {
     			var text = getTextData()
           query(text)
           //remove gsc_overflow thing
-          
         }
     	}
+      // function callback(mutationsList, observer) {
+      //   console.log('Mutations:', mutationsList)
+      //   console.log('Observer:', observer)
+      // }
+      // const bodyClassListener = new MutationObserver(callback)
+      // var body = document.getElementsByTagName('BODY')[0]
+      // bodyClassListener.observe(
+      //     body, 
+      //     {attributes: true}
+      // )
+
+      // function callback(mutationsList) {
+      //   mutationsList.forEach(mutation => {
+      //     if (mutation.attributeName == 'class' && (mutation.target.className != '' || mutation.target.className == null)){
+      //       mutation.target.className = ''
+      //     }
+      //   })
+      // }
       //remove gsc results component
       var gsc_results = document.getElementsByClassName('gsc-results-wrapper-overlay')[0]
-      console.log(gsc_results.parentNode)
       gsc_results.remove()
+      var searchImage = document.getElementsByClassName('gsc-modal-background-image')[0]
+      searchImage.remove()
     }
 
   	// await poshmark.login()
