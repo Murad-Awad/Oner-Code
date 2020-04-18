@@ -2,19 +2,26 @@ import React, {Component, Fragment} from 'react';
 import ReactDOM from 'react-dom';
 import Header from './layout/Header'
 import Dashboard from './Clothes/Dashboard'
+import {Provider} from 'react-redux';
+import store from '../store';
 import PoshmarkAPI from './Clothes/PoshmarkWebScraping/poshmark'
 
 class App extends Component {
 	render() {
 		return (
-			<Fragment>
-				<Header />
-				<div className="container">
-					<Dashboard />
-				</div>
-			</Fragment>
-		)
+      <Provider store = {store} >
+  			<Fragment>
+  				<Header />
+  				<div className="container">
+  					<Dashboard />
+  				</div>
+  			</Fragment>
+      </Provider>
+		);
 	}
+
+
+
 	async componentDidMount() {
 		// const wait = await fetch("https://cse.google.com/cse.js?cx=011620595250338818134:gnjrxsh4vgi");
 		const script = document.createElement('script')
@@ -87,8 +94,10 @@ class App extends Component {
 
   	// await poshmark.login()
     function query(text) {
+      //bring in poshmarkApi
       var poshmark = new PoshmarkAPI();
       console.log('querying')
+      poshmark.query(text)
     }
 
 	}

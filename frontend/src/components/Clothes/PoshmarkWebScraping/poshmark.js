@@ -3,6 +3,7 @@ const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
 const formatProxy = require('./utils/formatproxy');
 import {Login} from './login/index'
+import {findListings} from './SearchForListings/query'
 
 export default class PoshmarkAPI {
     /**
@@ -29,5 +30,12 @@ export default class PoshmarkAPI {
             proxy: this.proxy,
             cookieJar: this.cookieJar
         });
+    }
+    async query (query) {
+        await findListings({
+            query: query,
+            proxy: this.proxy,
+            cookieJar: this.cookieJar,
+        })
     }
 };
