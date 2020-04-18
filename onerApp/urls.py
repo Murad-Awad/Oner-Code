@@ -1,6 +1,7 @@
-from django.urls import path
-from . import views
+from rest_framework import routers
+from .api import ClothingViewSet
 
-urlpatterns = [
-    path('api/onerApp/', views.ClothingListCreate.as_view() ),
-]
+router = routers.DefaultRouter()
+router.register('api/clothes', ClothingViewSet, 'clothes')
+
+urlpatterns = router.urls

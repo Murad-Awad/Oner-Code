@@ -5,7 +5,9 @@ import {getClothes, deleteClothes} from '../../actions/clothes'
 
 class Clothes extends Component {
 	static propTypes = {
-		clothes: PropTypes.array.isRequired
+		clothes: PropTypes.array.isRequired,
+		getClothes: PropTypes.func.isRequired,
+		deleteClothes: PropTypes.func.isRequired
 	}
 
 	componentDidMount() {
@@ -34,7 +36,7 @@ class Clothes extends Component {
 							<td> {clothing.name} </td>
 							<td> {clothing.price} </td>
 							<td> {clothing.quantity} </td>
-							<td> <img src={clothing.image_url} width="123px"></img> </td>
+							<td> <img src={clothing.image ? clothing.image : clothing.image_url} width="123px"></img> </td>
 							<td>
 								<button 
 								onClick={this.props.deleteClothes.bind(this, clothing.id)}

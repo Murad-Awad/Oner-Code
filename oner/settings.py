@@ -15,7 +15,28 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'filters': ['require_debug_true'],
+        },
+    },
+    'loggers': {
+        'mylogger': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': True,
+        },
+    },
+}
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -39,10 +60,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'onerApp',
     'rest_framework',
-    'frontend'
+    'frontend',
+    'corsheaders',  # for cors policies
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,6 +74,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'oner.urls'
 
@@ -79,10 +104,10 @@ WSGI_APPLICATION = 'oner.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd73op3n9up3b3r',
-        'USER': 'vclbkqfhiexlit',
-        'PASSWORD': '89b19d8c5c605d7d4b968d2b12850db35a91c3208a820b3fe4723011e8413481',
-        'HOST': 'ec2-34-234-228-127.compute-1.amazonaws.com',
+        'NAME': 'd4tb3lvvi5c2nb',
+        'USER': 'axqbamlkvtwixg',
+        'PASSWORD': 'debc53707380e7bde68576204f853e3ad2682b041fb30c41747ed25c212bc759',
+        'HOST': 'ec2-54-157-78-113.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -125,3 +150,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'oner/media')
