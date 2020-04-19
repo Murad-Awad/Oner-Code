@@ -1,7 +1,8 @@
-import {GET_CLOTHES, DELETE_CLOTHES, ADD_CLOTHES} from '../actions/types.js'
+import {GET_CLOTHES, DELETE_CLOTHES, ADD_CLOTHES, SEARCH_CLOTHES} from '../actions/types.js'
 
 const initialState = {
-	clothes : []
+	clothes : [],
+	queriedClothes: [],
 }
 
 export default function (state = initialState, action) {
@@ -9,18 +10,27 @@ export default function (state = initialState, action) {
 		case GET_CLOTHES:
 			return {
 				...state,
-				clothes: action.payload
+				clothes: action.payload,
+				queriedClothes: state.queriedClothes
 			};
 		case DELETE_CLOTHES:
 			return {
 				...state,
-				clothes: state.clothes.filter(clothes => clothes.id != action.payload)
+				clothes: state.clothes.filter(clothes => clothes.id != action.payload),
+				queriedClothes: state.queriedClothes
 			};
 		case ADD_CLOTHES:
 			return {
 				...state,
-				clothes: [...state.clothes, action.payload]
+				clothes: [...state.clothes, action.payload],
+				queriedClothes: state.queriedClothes
 			};
+		case SEARCH_CLOTHES:
+			return {
+				...state,
+				clothes: [...state.clothes],
+				queriedClothes: action.payload
+			}
 	default:
 		return state
 

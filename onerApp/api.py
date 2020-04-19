@@ -23,13 +23,15 @@ class ClothingViewSet(viewsets.ModelViewSet):
 def searchForClothesPoshmark(request):
 	logger = logging.getLogger('mylogger')
 	try:
-		body = json.loads(request.body)
-		query = body["query"]
+		query = request.GET.get('q', '')
+		logger.info(query)
 		searchResultsObject = {"data": []}
 		poshmarkResults = requests.get("https://poshmark.com/search?query=" + query).text
 		soup = BeautifulSoup(poshmarkResults)
 		soup = soup.find("div", {"data-test": "tiles_container"})
 		soup = soup.contents
+		logger.info(soup)
+		i = 0
 		for listing in soup:
 			listingToAdd = extractInfo(listing)
 			if listingToAdd:
@@ -41,7 +43,7 @@ def searchForClothesPoshmark(request):
 
 def extractInfo(listing):
 	listingToAdd = None
-	if type(listing) is not Comment and listing.get("class")[0] == 'tile':
+	if listing and type(listing) is not Comment and listing.get("class") and listing.get("class")[0] == 'tile':
 		listingToAdd = {}
 		listingContents = {}
 		listingDetails = listing.find("div", class_="item__details")
@@ -49,12 +51,6 @@ def extractInfo(listing):
 		listingContents["img"] = getImageFromPoshmark(listing)
 		listingContents["price"] = getPriceFromPoshmark(listingDetails)
 		listingContents["originalPrice"] = getOriginalPriceFromPoshmark(listingDetails)
-		image_tree_link = listing.find("div", class_="img__container img__container--square")
-		image = image_tree_link.find("img")['src']
-		listingDetails = listing.find("div", class_="item__details")
-		name = listingDetails.find("a", {"data-et-name": "listing"})
-		currentPrice = listingDetails.find("span", {"data-test": "tile-price"})
-		originalPrice = listingDetails.find("span", {"data-test": "tile-original-price"})
 		listingToAdd["listing"] = listingContents
 	return listingToAdd
 
