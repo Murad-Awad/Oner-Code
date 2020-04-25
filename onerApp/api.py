@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 from .serializers import ClothingSerializer
 from bs4 import BeautifulSoup, Comment, NavigableString
 import requests
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError, ParseError
 import logging
@@ -17,26 +17,30 @@ class ClothingViewSet(viewsets.ModelViewSet):
 	]
 	serializer_class = ClothingSerializer
 
-
-#web scraping get request
 @api_view(['GET'])
-def searchForClothesPoshmark(request):
-	logger = logging.getLogger('mylogger')
+def searchForClothes(request):
 	try:
 		query = request.GET.get('q', '')
-		logger.info(query)
-		searchResultsObject = {"data": []}
+		searchResultsObject = {"data": {}}
+		searchResultsObject["data"]["poshmark"] = searchForClothesPoshmark(query)
+		return JsonResponse(searchResultsObject)
+	except ValueError:
+		raise ParseError
+
+#web scraping get request
+def searchForClothesPoshmark(query):
+	try:
+		results = []
 		poshmarkResults = requests.get("https://poshmark.com/search?query=" + query).text
 		soup = BeautifulSoup(poshmarkResults)
 		soup = soup.find("div", {"data-test": "tiles_container"})
 		soup = soup.contents
-		logger.info(soup)
 		i = 0
 		for listing in soup:
 			listingToAdd = extractInfo(listing)
 			if listingToAdd:
-				searchResultsObject["data"].append(listingToAdd)
-		return JsonResponse(searchResultsObject)
+				results.append(listingToAdd)
+		return results
 	except ValueError:
 		raise ParseError
 
@@ -45,13 +49,11 @@ def extractInfo(listing):
 	listingToAdd = None
 	if listing and type(listing) is not Comment and listing.get("class") and listing.get("class")[0] == 'tile':
 		listingToAdd = {}
-		listingContents = {}
 		listingDetails = listing.find("div", class_="item__details")
-		listingContents["name"] = getNameFromPoshmark(listingDetails)
-		listingContents["img"] = getImageFromPoshmark(listing)
-		listingContents["price"] = getPriceFromPoshmark(listingDetails)
-		listingContents["originalPrice"] = getOriginalPriceFromPoshmark(listingDetails)
-		listingToAdd["listing"] = listingContents
+		listingToAdd["name"] = getNameFromPoshmark(listingDetails)
+		listingToAdd["img"] = getImageFromPoshmark(listing)
+		listingToAdd["price"] = getPriceFromPoshmark(listingDetails)
+		listingToAdd["originalPrice"] = getOriginalPriceFromPoshmark(listingDetails)
 	return listingToAdd
 
 def getImageFromPoshmark(listing):

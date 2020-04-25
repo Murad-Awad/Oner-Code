@@ -29,7 +29,7 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				clothes: [...state.clothes],
-				queriedClothes: action.payload
+				queriedClothes: action.payload.data.poshmark
 			}
 	default:
 		return state

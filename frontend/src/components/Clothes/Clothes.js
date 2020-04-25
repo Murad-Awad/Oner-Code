@@ -3,6 +3,13 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {getClothes, deleteClothes} from '../../actions/clothes'
 
+const style = {
+	position: 'relative',
+	height: '200px',
+	overflow: 'auto',
+	display: 'block',
+};
+
 class Clothes extends Component {
 	static propTypes = {
 		clothes: PropTypes.array.isRequired,
@@ -18,6 +25,7 @@ class Clothes extends Component {
 		return (
 			<Fragment>
 				<h2 align = 'center'>Your Clothing</h2>
+				<div className="clothingResults" style={style}>
 				<table className="table table-striped">
 					<thead> 
 						<tr>
@@ -46,6 +54,7 @@ class Clothes extends Component {
 					))}
 					</tbody>
 				</table>
+				</div>
 			</Fragment>
 		);
 	};
