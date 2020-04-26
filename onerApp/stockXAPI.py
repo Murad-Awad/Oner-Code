@@ -144,6 +144,7 @@ def getClothingData(query):
 		graph_dict = {}
 		graph_dict["graph_data"] = getGraphData(sku, driver)
 		result.append(graph_dict)
+		mostPopularMonth = {}
 		# listings = soup.findChild().contents
 
 		# for listing in listings:

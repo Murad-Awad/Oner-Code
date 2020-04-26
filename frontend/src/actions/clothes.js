@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import {GET_CLOTHES, DELETE_CLOTHES, ADD_CLOTHES, SEARCH_CLOTHES, GET_DATA} from './types'
+import {GET_CLOTHES, DELETE_CLOTHES, ADD_CLOTHES, SEARCH_CLOTHES, GET_DATA, REFRESH_DATA} from './types'
 
 //get clothes
 //dispatch actions to our reducer
@@ -69,7 +69,7 @@ export const getData = (query) => dispatch => {
 	.then(res => {
 	console.log(res.data)
 	dispatch({
-		type: SEARCH_CLOTHES,
+		type: GET_DATA,
 		payload: res.data,
 	});
 	})
@@ -79,3 +79,9 @@ export const getData = (query) => dispatch => {
 	})
 }
 
+export const refreshData = () => dispatch => {
+	dispatch({
+		type: REFRESH_DATA,
+		payload: [],
+	});
+}
