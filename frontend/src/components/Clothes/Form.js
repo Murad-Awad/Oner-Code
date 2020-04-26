@@ -28,6 +28,7 @@ class Form extends React.Component {
 		image: null,
 		link: '',
 		popup: false,
+		loading: false
 	}
 	static propTypes = {
 		queriedClothes: PropTypes.array.isRequired,
@@ -72,7 +73,7 @@ class Form extends React.Component {
 						</tr>
 					</thead>
 					<tbody style= {{overflow: 'auto', height: 'inherit'}}>
-					{ this.props.queriedClothes.map(clothing => (
+					{ this.state.loading && this.props.queriedClothes.length > 0 ? this.props.queriedClothes.map(clothing => (
 						<tr key = {clothing.name} className = 'clickable-row' data-href={'/api/getData/?q' + clothing.href}>
 							<td> {clothing.name} </td>
 							<td> {clothing.lowest_ask_price} </td>
@@ -81,7 +82,7 @@ class Form extends React.Component {
 								<button onClick = {() => this.viewDetails(clothing)} className="btn btn-primary btn-sn">Add to Closet</button>
 							</td>
 						</tr>
-					))}
+					)) : this.state.loading ? "LOADING..." : null}
 					</tbody>
 				</table>
 			</div>
@@ -109,6 +110,7 @@ class Form extends React.Component {
 				var text = getTextData()
 				console.log(text)
 				this.props.searchClothes(text)
+				this.setState({loading : true})
 	        }
 	  	}
 		textInput.onkeydown = (key) => {
@@ -119,6 +121,7 @@ class Form extends React.Component {
 	    		var text = getTextData()
 	    		console.log(text)
 	    		this.props.searchClothes(text)
+	    		this.setState({loading : true})
 	          //remove gsc_overflow thing
 	        }
 	    }

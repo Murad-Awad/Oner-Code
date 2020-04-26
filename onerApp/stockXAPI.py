@@ -145,6 +145,8 @@ def getClothingData(query):
 		graph_dict["graph_data"] = getGraphData(sku, driver)
 		result.append(graph_dict)
 		mostPopularMonth = {}
+		# mostPopularMonth["most_sold_month"] = getMostSoldMonth()
+
 		# listings = soup.findChild().contents
 
 		# for listing in listings:
@@ -164,7 +166,7 @@ def getGaugeContent(soup):
 	return result
 
 def getSKU(soup):
-	sku = ""
+	sku = {}
 	if soup:
 		productView = soup.find("div", {"class": "product-view"})
 		script = productView.find("script") if productView else None
@@ -181,6 +183,70 @@ def getGraphData(sku, driver):
 		soup = BeautifulSoup(driver.page_source)
 		data = soup.find("div", {"id": "json"}) if soup else None
 		jsonData = json.loads(data.text) if data and data.text else {}
+		jsonData["highest_selling_month"] = getMostSoldMonth(jsonData)
 		return jsonData
 	except TimeoutException:
 		raise ParseError
+
+def getMostSoldMonth(jsonData):
+	result = {}
+	xAxis = jsonData['xAxis']['categories']
+	data = jsonData['series'][0]['data']
+	newMap = {}
+	highestAvgValue = 0
+	highestMonth = ''
+	for i in range(len(xAxis)):
+		curMonth = xAxis[i]
+		monthReformatted = curMonth[22:]
+		monthReformatted = monthReformatted[:7]
+		curData = data[i]
+
+		#if key does exist increase how many times we see it and change avgValue
+		if monthReformatted in newMap:
+			oldValue = newMap[monthReformatted]['avg'] * newMap[monthReformatted]['num_of_times']
+			newMap[monthReformatted]['num_of_times'] = newMap[monthReformatted]['num_of_times'] + 1
+			newMap[monthReformatted]['avg'] = float(float(oldValue + curData)/float(newMap[monthReformatted]['num_of_times']))
+		else:
+			newMap[monthReformatted] = {}
+			newMap[monthReformatted]['num_of_times'] = 1.0
+			newMap[monthReformatted]['avg'] = float(curData)
+
+		if newMap[monthReformatted]['avg'] > highestAvgValue:
+			highestMonth = monthReformatted
+			highestAvgValue = newMap[monthReformatted]['avg']
+	print("HIGHEST VALUE", highestAvgValue)
+	print("HIGHEST MONTH", highestMonth)
+	result["highestMonth"] = convertToWords(highestMonth)
+	result["highestValue"] = highestAvgValue
+	return result;
+
+def convertToWords(month):
+	yearAndMonth = month.split('-')
+	month = yearAndMonth[1]
+	monthInWords = ''
+	if month == '01':
+		monthInWords = 'January'
+	if month == '02':
+		monthInWords = 'February'
+	if month == '03':
+		monthInWords = 'March'
+	if month == '04':
+		monthInWords = 'April'
+	if month == '05':
+		monthInWords = 'May'
+	if month == '06':
+		monthInWords = 'June'
+	if month == '07':
+		monthInWords = 'July'
+	if month == '08':
+		monthInWords = 'August'
+	if month == '09':
+		monthInWords = 'September'
+	if month == '10':
+		monthInWords = 'October'
+	if month == '11':
+		monthInWords = 'November'
+	if month == '12':
+		monthInWords = 'December'
+	print(monthInWords)
+	return monthInWords + " " + yearAndMonth[0]

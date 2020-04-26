@@ -57,6 +57,9 @@ render() {
                    <h2>Lowest Ask Price: {this.props.clothingData.price}</h2>
                    <h3>Average Return Over Retail Price: {this.props.clothingInfo.length >= 1 ? this.props.clothingInfo[0].price_premium : "LOADING..."}</h3>
                    <h3>Average Sales Price: {this.props.clothingInfo.length >= 2 ? this.props.clothingInfo[1].avg_sale_price : "LOADING..."} </h3>
+                   <h3>Month With Highest Average Sales Price: {this.props.clothingInfo.length >= 3 ? this.props.clothingInfo[2].graph_data.highest_selling_month.highestMonth : "LOADING..."} </h3>
+                   <h3>Average Sales Price For Highest Average Sales Price Month: {this.props.clothingInfo.length >= 3 ? this.props.clothingInfo[2].graph_data.highest_selling_month.highestValue.toFixed(2) : "LOADING..."} </h3>
+
                    <form onSubmit={this.onSubmit}>
 	          				<div className="form-group">
 					            <label>Price You Want to Sell For</label>
