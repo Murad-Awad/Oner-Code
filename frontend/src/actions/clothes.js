@@ -52,6 +52,7 @@ export const addClothes = (clothing) => dispatch => {
 export const searchClothes = (query) => dispatch => {
 	axios.get('/api/query/?q=' + query)
 	.then(res => {
+	// console.log(res.data)
 	dispatch({
 		type: SEARCH_CLOTHES,
 		payload: res.data,

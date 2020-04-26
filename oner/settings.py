@@ -46,7 +46,7 @@ SECRET_KEY = 's&1bc77(de0)nkb5l46)wk0brr532wi6l275vkc+iz-vmnc^u4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -145,7 +145,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 

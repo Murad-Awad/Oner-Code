@@ -39,18 +39,16 @@ class Form extends React.Component {
 					<thead> 
 						<tr>
 							<th>Name</th>
-							<th>Listing Price</th>
-							<th>Original Price</th>
+							<th>Lowest Asking Price</th>
 							<th>Image</th>
 							<th />
 						</tr>
 					</thead>
 					<tbody style= {{overflow: 'auto', height: 'inherit'}}>
 					{ this.props.queriedClothes.map(clothing => (
-						<tr key = {clothing.name} className = 'clickable-row' data-href='#'>
+						<tr key = {clothing.name} className = 'clickable-row' data-href={'/api/getData/?q' + clothing.href}>
 							<td> {clothing.name} </td>
-							<td> {clothing.price} </td>
-							<td> {clothing.originalPrice} </td>
+							<td> {clothing.lowest_ask_price} </td>
 							<td> <img src={clothing.img} width="123px"></img> </td>
 							<td>
 							</td>
