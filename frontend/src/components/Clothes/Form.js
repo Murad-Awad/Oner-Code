@@ -9,7 +9,7 @@ import ClothingInfo from './ClothingInfo'
 
 const style = {
 	position: 'relative',
-	height: '400px',
+	height: '200px',
 	overflow: 'auto',
 	display: 'block',
 };
