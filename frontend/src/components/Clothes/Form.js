@@ -5,20 +5,29 @@ import PoshmarkAPI from './PoshmarkWebScraping/poshmark';
 import {searchClothes, addClothes} from '../../actions/clothes';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import ClothingInfo from './ClothingInfo'
 
 const style = {
 	position: 'relative',
-	height: '200px',
+	height: '400px',
 	overflow: 'auto',
 	display: 'block',
 };
 
 class Form extends React.Component {
+	constructor(props) {
+    super(props)
+
+    this.viewHandler = this.viewHandler.bind(this)
+  }
+
 	state = {
 		name: '',
 		price: '',
 		quantity: '',
-		image: '',
+		image: null,
+		link: '',
+		popup: false,
 	}
 	static propTypes = {
 		queriedClothes: PropTypes.array.isRequired,
@@ -26,11 +35,29 @@ class Form extends React.Component {
 		addClothes: PropTypes.func.isRequired,
 	}
 
+	viewDetails(clothing) {
+		this.setState({ 
+					name : clothing.name,
+					price: clothing.lowest_ask_price,
+					img: clothing.img,
+					link: clothing.href,
+					popup: true
+		});
+	}
+	
+	viewHandler(){
+		this.setState({
+			popup: !this.state.popup
+		})
+	}
+
+	
 	render() {
-		const {name, price, quantity, image} = this.state
+		const {name, price, quantity, image, popup} = this.state
 		return (
 			<Fragment>
 				<h1 align = 'center'>Add Clothes</h1>
+				{this.state.popup ? <ClothingInfo clothingData={this.state} viewHandler = {this.viewHandler.bind(this)} visible={this.state.popup}/> : null}
 				<div>
 					<div className="gcse-search" id = "searchBar" ></div>
 				</div>
@@ -51,6 +78,7 @@ class Form extends React.Component {
 							<td> {clothing.lowest_ask_price} </td>
 							<td> <img src={clothing.img} width="123px"></img> </td>
 							<td>
+								<button onClick = {() => this.viewDetails(clothing)} className="btn btn-primary btn-sn">Add to Closet</button>
 							</td>
 						</tr>
 					))}

@@ -3,6 +3,7 @@ import {GET_CLOTHES, DELETE_CLOTHES, ADD_CLOTHES, SEARCH_CLOTHES} from '../actio
 const initialState = {
 	clothes : [],
 	queriedClothes: [],
+	ClothingData: {}
 }
 
 export default function (state = initialState, action) {

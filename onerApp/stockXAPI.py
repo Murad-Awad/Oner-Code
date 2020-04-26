@@ -117,3 +117,7 @@ def scrollDownWindow(driver):
 	driver.execute_script("window.scrollTo(document.body.scrollHeight + document.body.scrollHeight, document.documentElement.scrollHeight);")
 
 	new_height = driver.execute_script("return document.documentElement.scrollHeight")
+
+def getClothingData(query):
+	result = {}
+	return result

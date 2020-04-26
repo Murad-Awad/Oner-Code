@@ -6,7 +6,6 @@ import CustomClothingForm from './CustomClothingForm'
 export default function Dashboard() {
 	return (
 		<Fragment>
-			<CustomClothingForm />
 			<Form />
 			<Clothes />
 		</Fragment>

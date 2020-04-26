@@ -10,6 +10,7 @@ import logging
 import json
 from .poshmarkAPI import searchForClothesPoshmark
 from .stockXAPI import searchForClothesStockX
+from .stockXAPI import getClothingData
 
 #Clothing Viewset
 class ClothingViewSet(viewsets.ModelViewSet):
@@ -27,6 +28,15 @@ def searchForClothes(request):
 		searchResultsObject["data"]["stockX"] = searchForClothesStockX(query)
 		searchResultsObject["data"]["poshmark"] = searchForClothesPoshmark(query)
 		return JsonResponse(searchResultsObject)
+	except ValueError:
+		raise ParseError
+
+@api_view(['GET'])
+def getClothingInfo(request):
+	try:
+		clothing = request.GET.get('q', '')
+		result = getClothingData(clothing)
+		return JsonResponse(result)
 	except ValueError:
 		raise ParseError
 

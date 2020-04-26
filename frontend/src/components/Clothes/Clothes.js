@@ -5,7 +5,7 @@ import {getClothes, deleteClothes} from '../../actions/clothes'
 
 const style = {
 	position: 'relative',
-	height: '200px',
+	height: '550px',
 	overflow: 'auto',
 	display: 'block',
 };

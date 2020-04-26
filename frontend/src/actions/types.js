@@ -2,3 +2,4 @@
  export const DELETE_CLOTHES = 'DELETE_CLOTHES'
  export const ADD_CLOTHES = 'ADD_CLOTHES'
  export const SEARCH_CLOTHES = 'SEARCH_CLOTHES'
+ export const GET_DATA = 'GET_DATA'
