@@ -26,6 +26,7 @@ from fake_useragent import UserAgent
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.common.exceptions import NoSuchElementException
 import time
+from datetime import date
 
 async def getStockXData(url, session):
 	stockXResults = await session.get(url)
@@ -119,5 +120,66 @@ def scrollDownWindow(driver):
 	new_height = driver.execute_script("return document.documentElement.scrollHeight")
 
 def getClothingData(query):
-	result = {}
+	url = query
+	driver = webdriver.Firefox(executable_path='/mnt/c/GeckoDriver/geckodriver.exe')
+	result = []
+	try:
+		driver.get(url)
+
+		WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//div[@class="latest-sales-container chart"]')))
+		scrollDownWindow(driver)
+
+		#start extracting listings
+		soup = BeautifulSoup(driver.page_source)
+		gauges = soup.find("div", {"class": "gauges"})
+		print(gauges.contents)
+		children = gauges.contents if gauges else []
+		price_premium_dict = {}
+		price_premium_dict["price_premium"] = getGaugeContent(children[1])
+		result.append(price_premium_dict)
+		avg_sale_price_dict = {}
+		avg_sale_price_dict["avg_sale_price"] = getGaugeContent(children[2])
+		result.append(avg_sale_price_dict)
+		sku = getSKU(soup)
+		graph_dict = {}
+		graph_dict["graph_data"] = getGraphData(sku, driver)
+		result.append(graph_dict)
+		# listings = soup.findChild().contents
+
+		# for listing in listings:
+		# 	listingToAdd = extractInfo(listing)
+		# 	if listingToAdd:
+		# 		results.append(listingToAdd)
+		# return results
+		return result
+	except TimeoutException:
+		raise ParseError
+
+def getGaugeContent(soup):
+	result = ""
+	if soup:
+		content = soup.find("div", {"class": "gauge-value"})
+		result = stringPrettify(content.text) if content else ""
 	return result
+
+def getSKU(soup):
+	sku = ""
+	if soup:
+		productView = soup.find("div", {"class": "product-view"})
+		script = productView.find("script") if productView else None
+		jsonText = script.text if script else "{}"
+		jsonObj = json.loads(jsonText)
+		sku = jsonObj['sku']
+	return sku
+
+def getGraphData(sku, driver):
+	url = "https://stockx.com/api/products/" + sku + "/chart?start_date=all&end_date=" + date.today().strftime("%Y-%m-%d") + "&intervals=10000"
+	result = {}
+	try:
+		driver.get(url)
+		soup = BeautifulSoup(driver.page_source)
+		data = soup.find("div", {"id": "json"}) if soup else None
+		jsonData = json.loads(data.text) if data and data.text else {}
+		return jsonData
+	except TimeoutException:
+		raise ParseError

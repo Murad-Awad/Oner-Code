@@ -35,7 +35,8 @@ def searchForClothes(request):
 def getClothingInfo(request):
 	try:
 		clothing = request.GET.get('q', '')
-		result = getClothingData(clothing)
+		result = {"data": []}
+		result["data"] = getClothingData(clothing)
 		return JsonResponse(result)
 	except ValueError:
 		raise ParseError
